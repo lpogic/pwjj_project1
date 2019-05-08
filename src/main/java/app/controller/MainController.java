@@ -1,9 +1,9 @@
 package app.controller;
 
 import app.core.OpenController;
-import app.shipper.DatabaseShipper;
-import app.shipper.HooktheoryShipper;
-import app.shipper.LoginShipper;
+import app.shipper.DatabaseDealer;
+import app.shipper.HooktheoryDealer;
+import app.shipper.LoginDealer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
@@ -52,16 +52,16 @@ public class MainController extends OpenController {
 
     @FXML
     public void loginAction(){
-        System.out.println(openRoot().getShop().instantOrder(LoginShipper.token));
+        System.out.println(openRoot().getShop().instantOrder(LoginDealer.token));
     }
 
     @FXML
     void requestAction(ActionEvent event) {
-        openRoot().getShop().instantOrder(HooktheoryShipper.showTrends);
+        openRoot().getShop().instantOrder(HooktheoryDealer.showTrends);
     }
 
     @FXML
     void saveAction(ActionEvent event) {
-        openRoot().getShop().instantOrder(DatabaseShipper.textTrackSavingDialog);
+        openRoot().getShop().instantOrder(DatabaseDealer.textTrackSavingDialog);
     }
 }

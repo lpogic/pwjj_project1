@@ -1,11 +1,11 @@
 package app.core;
 
-import app.core.shop.Shop;
+import app.core.shop.Dealer;
 
 public abstract class OpenPaneScion {
 
     private OpenPane openPane;
-    private Shop shop;
+    private Dealer shop;
 
     public OpenPaneScion(OpenPane openPane) {
         this();
@@ -13,7 +13,7 @@ public abstract class OpenPaneScion {
     }
 
     public OpenPaneScion() {
-        shop = new Shop();
+        shop = new Dealer();
     }
 
     protected void setLineage(OpenPane openPane){this.openPane = openPane;}
@@ -34,7 +34,7 @@ public abstract class OpenPaneScion {
         return openPane;
     }
 
-    public Shop getShop() {
+    public Dealer getShop() {
         return shop;
     }
 }

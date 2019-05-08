@@ -1,9 +1,8 @@
 package app.shipper;
 
 import app.core.OpenRoot;
-import app.core.service.OpenShipper;
+import app.core.service.OpenRootDealer;
 import app.core.shop.Product;
-import app.core.shop.Shop;
 import javafx.scene.control.Alert;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -16,36 +15,35 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LoginShipper extends OpenShipper {
+public class LoginDealer extends OpenRootDealer {
     public static final Object remoteToken = new Object();
     public static final Object token = new Object();
 
-    public LoginShipper(OpenRoot openRoot) {
+    public LoginDealer(OpenRoot openRoot) {
         super(openRoot);
     }
 
     @Override
-    public void signContract(Shop shop){
-        shop.offer(remoteToken,()->{
-            if(shop.order("username",String.class) &&
-                    shop.order("password",String.class)){
+    public void employ(){
+        offer(remoteToken,()->{
+            if(order("username",String.class) && order("password",String.class)){
                 try {
-                    return requestToken((String) shop.purchase("username"),
-                            (String) shop.purchase("password"));
+                    return requestToken(purchase("username",String.class),
+                            purchase("password",String.class));
                 }catch (IOException e){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Blad");
-                alert.setHeaderText("Wystapil blad podczas logowania");
-                alert.showAndWait();
-            }
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Blad");
+                    alert.setHeaderText("Wystapil blad podczas logowania");
+                    alert.showAndWait();
+                }
             }
             return null;
         },Product.REUSABLE);
 
-        shop.offer(token,()->{
+        offer(token,()->{
             openRoot().openStage("login").openScene().openStyle("css/login.css");
             openRoot().openStage("login").showAndWait();
-            return shop.instantOrder(remoteToken);
+            return instantOrder(remoteToken);
         },Product.REUSABLE);
     }
 

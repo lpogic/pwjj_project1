@@ -3,7 +3,7 @@ package app.controller;
 import app.core.OpenController;
 import app.model.MidiTrackPlayer;
 import app.model.TrackText;
-import app.shipper.DatabaseShipper;
+import app.shipper.DatabaseDealer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -114,7 +114,7 @@ public class SaveTrackController extends OpenController {
 
 
     private void saveTrack() {
-        Platform.runLater(openRoot().getShop().order(DatabaseShipper.saveTrackText) ?
+        Platform.runLater(openRoot().getShop().order(DatabaseDealer.saveTrackText) ?
                 this::responseSuccess : this::responseFail);
     }
 

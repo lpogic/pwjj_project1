@@ -4,7 +4,7 @@ import app.core.OpenController;
 import app.core.shop.Product;
 import app.model.MidiTrackPlayer;
 import app.model.TrackText;
-import app.shipper.SynthesizerShipper;
+import app.shipper.SynthesizerDealer;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -64,6 +64,6 @@ public class SynthesizerController extends OpenController {
     }
 
     private void playTrack(){
-        openRoot().getShop().instantOrder(SynthesizerShipper.play);
+        openRoot().getShop().instantOrder(SynthesizerDealer.play);
     }
 }

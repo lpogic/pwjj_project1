@@ -2,7 +2,7 @@ package app.controller;
 
 import app.core.OpenController;
 import app.model.chords.TrendyChord;
-import app.shipper.HooktheoryShipper;
+import app.shipper.HooktheoryDealer;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.stage.StageStyle;
@@ -23,8 +23,8 @@ public class DiagramController extends OpenController {
 
     @Override
     protected void dress() {
-        if(openRoot().getShop().order(HooktheoryShipper.trends,Collection.class)){
-            Object trends = openRoot().getShop().purchase(HooktheoryShipper.trends);
+        if(openRoot().getShop().order(HooktheoryDealer.trends,Collection.class)){
+            Object trends = openRoot().getShop().purchase(HooktheoryDealer.trends);
             if(trends instanceof Collection) {
                 pie.getData().clear();
                 for (TrendyChord it : (Collection<? extends TrendyChord>)trends) {

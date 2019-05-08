@@ -1,24 +1,23 @@
 package app.shipper;
 
 import app.core.OpenRoot;
-import app.core.service.OpenShipper;
-import app.core.shop.Shop;
+import app.core.service.OpenRootDealer;
 import app.model.MidiTrackPlayer;
 import app.model.TrackText;
 
-public class SynthesizerShipper extends OpenShipper {
+public class SynthesizerDealer extends OpenRootDealer {
     public static final Object play = new Object();
 
-    public SynthesizerShipper(OpenRoot openRoot) {
+    public SynthesizerDealer(OpenRoot openRoot) {
         super(openRoot);
     }
 
     @Override
-    public void signContract(Shop shop) {
-        shop.offer(play,()->{
+    public void employ() {
+        offer(play,()->{
             synchronized (play) {
-                if (shop.order("TrackText", TrackText.class)) {
-                    TrackText trackText = (TrackText) shop.purchase("TrackText");
+                if (rootDealer().order(TrackText.class)) {
+                    TrackText trackText = rootDealer().purchase(TrackText.class);
                     if (MidiTrackPlayer.validateTrackText(trackText.getTrack())) {
                         MidiTrackPlayer.play(trackText, MidiTrackPlayer.INSTRUMENT_BASS);
                     }

@@ -1,12 +1,12 @@
 package app.core;
 
-import app.core.shop.Shop;
+import app.core.shop.Dealer;
 
 public abstract class OpenSceneScion {
 
     private Object id;
     private OpenScene openScene;
-    private Shop shop;
+    private Dealer shop;
 
     public OpenSceneScion(Object id, OpenScene openScene) {
         this(id);
@@ -15,7 +15,7 @@ public abstract class OpenSceneScion {
 
     public OpenSceneScion(Object id) {
         this.id = id;
-        shop = new Shop();
+        shop = new Dealer();
     }
 
     protected void setLineage(OpenScene openScene){this.openScene = openScene;}
@@ -40,7 +40,7 @@ public abstract class OpenSceneScion {
         return openScene;
     }
 
-    public Shop getShop() {
+    public Dealer getShop() {
         return shop;
     }
 

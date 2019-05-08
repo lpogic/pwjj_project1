@@ -1,7 +1,7 @@
 package app.controller;
 
 import app.core.OpenController;
-import app.shipper.LoginShipper;
+import app.shipper.LoginDealer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressIndicator;
@@ -85,7 +85,7 @@ public class LoginController extends OpenController {
 
 
     private void requestToken() {
-        if (openRoot().getShop().order(LoginShipper.remoteToken)) {
+        if (openRoot().getShop().order(LoginDealer.remoteToken)) {
             Platform.runLater(() -> openStage().close());
         } else Platform.runLater(this::responseFail);
     }

@@ -1,12 +1,12 @@
 package app.core;
 
-import app.core.shop.Shop;
+import app.core.shop.Dealer;
 
 public abstract class OpenStageScion {
 
     private Object id;
     private OpenStage openStage;
-    private Shop shop;
+    private Dealer shop;
 
     public OpenStageScion(Object id, OpenStage openStage) {
         this(id);
@@ -15,7 +15,7 @@ public abstract class OpenStageScion {
 
     public OpenStageScion(Object id) {
         this.id = id;
-        shop = new Shop();
+        shop = new Dealer();
     }
 
     protected void setLineage(OpenStage openStage){this.openStage = openStage;}
@@ -36,7 +36,7 @@ public abstract class OpenStageScion {
         return openStage;
     }
 
-    public Shop getShop() {
+    public Dealer getShop() {
         return shop;
     }
 

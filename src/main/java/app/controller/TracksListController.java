@@ -1,9 +1,8 @@
 package app.controller;
 
 import app.core.OpenController;
-import app.core.shop.Product;
 import app.model.TrackText;
-import app.shipper.DatabaseShipper;
+import app.shipper.DatabaseDealer;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -45,17 +44,17 @@ public class TracksListController extends OpenController {
 
     @Override
     protected void dress() {
-        if(openRoot().getShop().order(DatabaseShipper.getFilteredTracks)){
+        if(openRoot().getShop().order(DatabaseDealer.getFilteredTracks)){
             list.getItems().setAll((Collection)openRoot().getShop().
-                    purchase(DatabaseShipper.getFilteredTracks));
+                    purchase(DatabaseDealer.getFilteredTracks));
         }
     }
 
     @FXML
     void filterAction() {
-        if(openRoot().getShop().order(DatabaseShipper.getFilteredTracks)){
+        if(openRoot().getShop().order(DatabaseDealer.getFilteredTracks)){
             list.getItems().setAll((Collection)openRoot().getShop().
-                    purchase(DatabaseShipper.getFilteredTracks));
+                    purchase(DatabaseDealer.getFilteredTracks));
         }
     }
 }
