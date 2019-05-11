@@ -1,15 +1,20 @@
 package app.controller;
 
-import app.core.OpenController;
+import app.core.pane.OpenController;
+import app.core.shop.contract.Contract;
+import app.core.shop.contract.stamp.Stamp;
 import app.model.chords.TrendyChord;
-import app.shipper.HooktheoryDealer;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.stage.StageStyle;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class DiagramController extends OpenController {
+
+    public static final Contract<Object> show = Contract.forObject(Stamp.SERVICE);
+    public static final Contract<List<TrendyChord>> getTrends = Contract.forListOf(TrendyChord.class, Stamp.SERVICE);
 
     @FXML
     private PieChart pie;
@@ -23,14 +28,9 @@ public class DiagramController extends OpenController {
 
     @Override
     protected void dress() {
-        if(openRoot().getShop().order(HooktheoryDealer.trends,Collection.class)){
-            Object trends = openRoot().getShop().purchase(HooktheoryDealer.trends);
-            if(trends instanceof Collection) {
-                pie.getData().clear();
-                for (TrendyChord it : (Collection<? extends TrendyChord>)trends) {
-                    pie.getData().add(new PieChart.Data(it.getId(), it.getProbability()));
-                }
-            }
+        pie.getData().clear();
+        for (TrendyChord it : shop().deal(getTrends,Collections.emptyList())) {
+            pie.getData().add(new PieChart.Data(it.getId(), it.getProbability()));
         }
     }
 }

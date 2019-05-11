@@ -1,4 +1,4 @@
-package app.core;
+package app.core.pane;
 
 public abstract class OpenController extends OpenPaneScion {
 

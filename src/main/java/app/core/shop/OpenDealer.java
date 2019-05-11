@@ -2,7 +2,7 @@ package app.core.shop;
 
 import app.core.OpenRoot;
 
-public class OpenDealer extends AuthorizedDealer {
+public abstract class OpenDealer {
 
     private OpenRoot openRoot;
 
@@ -10,17 +10,13 @@ public class OpenDealer extends AuthorizedDealer {
         this.openRoot = openRoot;
     }
 
-    protected OpenRoot openRoot(){
+    public abstract void employ();
+
+    protected OpenRoot root(){
         return openRoot;
     }
 
-    protected OpenDealer rootDealer(){
-        return openRoot.openDealer();
+    protected Shop shop(){
+        return openRoot.getShop();
     }
-
-    protected OpenDealer rootDealer(Object key){
-        return openRoot.openDealer(key);
-    }
-
-    public void employ(){}
 }

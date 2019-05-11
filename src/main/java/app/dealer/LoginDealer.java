@@ -1,8 +1,10 @@
-package app.shipper;
+package app.dealer;
 
 import app.core.OpenRoot;
-import app.core.service.OpenRootDealer;
-import app.core.shop.Product;
+import app.core.shop.OpenDealer;
+import app.core.shop.contract.ClassicContract;
+import app.core.shop.contract.Contract;
+import app.core.shop.contract.stamp.Stamp;
 import javafx.scene.control.Alert;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -15,9 +17,12 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LoginDealer extends OpenRootDealer {
-    public static final Object remoteToken = new Object();
-    public static final Object token = new Object();
+public class LoginDealer extends OpenDealer {
+
+    public static final Contract<String> remoteToken = Contract.forClass(String.class, Stamp.WARRANTY);
+    public static final Contract<String> token = Contract.forClass(String.class, Stamp.WARRANTY);
+    public static final Contract<String> username = Contract.forClass(String.class);
+    public static final Contract<String> password = Contract.forClass(String.class);
 
     public LoginDealer(OpenRoot openRoot) {
         super(openRoot);
@@ -25,11 +30,10 @@ public class LoginDealer extends OpenRootDealer {
 
     @Override
     public void employ(){
-        offer(remoteToken,()->{
-            if(order("username",String.class) && order("password",String.class)){
+        shop().offer(remoteToken,()->{
+            if(shop().order(username) && shop().order(password)){
                 try {
-                    return requestToken(purchase("username",String.class),
-                            purchase("password",String.class));
+                    return requestToken(shop().deal(username), shop().deal(password));
                 }catch (IOException e){
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Blad");
@@ -38,13 +42,13 @@ public class LoginDealer extends OpenRootDealer {
                 }
             }
             return null;
-        },Product.REUSABLE);
+        });
 
-        offer(token,()->{
-            openRoot().openStage("login").openScene().openStyle("css/login.css");
-            openRoot().openStage("login").showAndWait();
-            return instantOrder(remoteToken);
-        },Product.REUSABLE);
+        shop().offer(token,()->{
+            root().openStage("login").openScene().openStyle("css/login.css");
+            root().openStage("login").showAndWait();
+            return shop().deal(remoteToken,null);
+        });
     }
 
     private String loginParams(String username, String password){

@@ -1,5 +1,6 @@
-package app.core;
+package app.core.pane;
 
+import app.core.scene.OpenScene;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;

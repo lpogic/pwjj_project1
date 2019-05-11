@@ -1,9 +1,9 @@
 package app.controller;
 
-import app.core.OpenController;
+import app.core.pane.OpenController;
 import app.model.MidiTrackPlayer;
 import app.model.TrackText;
-import app.shipper.DatabaseDealer;
+import app.dealer.DatabaseDealer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -59,12 +59,7 @@ public class SaveTrackController extends OpenController {
 
     @Override
     protected void dress() {
-        if(openRoot().getShop().order("TrackText",TrackText.class)){
-            trackText = (TrackText)openRoot().getShop().purchase("TrackText");
-        }else{
-            trackText = new TrackText();
-            openRoot().getShop().deliver("TrackText",trackText);
-        }
+        trackText = shop().deal(TrackText.class,new TrackText());
         name.textProperty().bindBidirectional(trackText.getNameProperty());
         track.textProperty().bindBidirectional(trackText.getTrackProperty());
         rate.valueProperty().bindBidirectional(trackText.getRateProperty());
@@ -114,8 +109,7 @@ public class SaveTrackController extends OpenController {
 
 
     private void saveTrack() {
-        Platform.runLater(openRoot().getShop().order(DatabaseDealer.saveTrackText) ?
-                this::responseSuccess : this::responseFail);
+        Platform.runLater(shop().order(DatabaseDealer.saveTrackText) ? this::responseSuccess : this::responseFail);
     }
 
 }

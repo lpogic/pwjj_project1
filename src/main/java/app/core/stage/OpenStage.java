@@ -1,13 +1,11 @@
-package app.core;
+package app.core.stage;
 
+import app.core.OpenRoot;
+import app.core.scene.OpenScene;
+import app.core.stage.OpenRootScion;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.net.URL;
 import java.util.*;
 
 public class OpenStage extends OpenRootScion {

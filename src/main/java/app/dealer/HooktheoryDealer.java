@@ -1,7 +1,9 @@
-package app.shipper;
+package app.dealer;
 
+import app.controller.DiagramController;
 import app.core.OpenRoot;
-import app.core.service.OpenRootDealer;
+import app.core.shop.OpenDealer;
+import app.core.shop.contract.Contract;
 import app.model.MidiTrackPlayer;
 import app.model.TrackText;
 import app.model.chords.TrendyChord;
@@ -11,12 +13,9 @@ import javafx.scene.control.Alert;
 import javax.net.ssl.HttpsURLConnection;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Collection;
+import java.util.List;
 
-public class HooktheoryDealer extends OpenRootDealer {
-
-    public static final Object showTrends = new Object();
-    public static final Object trends = new Object();
+public class HooktheoryDealer extends OpenDealer {
 
     public HooktheoryDealer(OpenRoot openRoot) {
         super(openRoot);
@@ -25,21 +24,19 @@ public class HooktheoryDealer extends OpenRootDealer {
     @Override
     public void employ() {
 
-        offer(showTrends,()->{
-            if(rootDealer(LoginDealer.class).order(LoginDealer.token,String.class)){
-                openRoot().openStage("diagram").show();
+        shop().offer(DiagramController.show,()->{
+            if(shop().order(LoginDealer.token)){
+                root().openStage("diagram").show();
             }
             return null;
         });
 
-        offer(trends,()->{
-            if(rootDealer(LoginDealer.class).order(LoginDealer.token,String.class)
-                    && rootDealer().order(TrackText.class)){
-                TrackText trackText = rootDealer().purchase(TrackText.class);
+        shop().offer(DiagramController.getTrends,()->{
+            if(shop().order(LoginDealer.token) && shop().order(TrackText.class)){
+                TrackText trackText = shop().deal(TrackText.class);
                 if(MidiTrackPlayer.validateTrackText(trackText.getTrack())) {
                     try {
-                        return requestTrends((String) purchase(LoginDealer.token),
-                                convertTrack(trackText.getTrack()));
+                        return requestTrends(shop().deal(LoginDealer.token), convertTrack(trackText.getTrack()));
                     }catch (Exception e){
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Blad");
@@ -52,7 +49,7 @@ public class HooktheoryDealer extends OpenRootDealer {
         });
     }
 
-    private Collection<TrendyChord> requestTrends(String token, String childPath)throws Exception{
+    private List<TrendyChord> requestTrends(String token, String childPath)throws Exception{
         String urlString = "https://api.hooktheory.com/v1/trends/nodes";
         if(!childPath.isEmpty()){
             urlString += "?cp=" + childPath;

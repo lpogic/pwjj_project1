@@ -1,12 +1,12 @@
-package app.core;
+package app.core.stage;
 
-import app.core.shop.Dealer;
+import app.core.OpenRoot;
+import app.core.shop.Shop;
 
 public abstract class OpenRootScion {
 
     private Object id;
     private OpenRoot openRoot;
-    private Dealer shop;
 
     public OpenRootScion(Object id, OpenRoot openRoot) {
         this(id);
@@ -15,7 +15,6 @@ public abstract class OpenRootScion {
 
     public OpenRootScion(Object id) {
         this.id = id;
-        shop = new Dealer();
     }
 
     protected void setLineage(OpenRoot openRoot) {
@@ -34,7 +33,7 @@ public abstract class OpenRootScion {
         return openRoot;
     }
 
-    public Dealer getShop() {
-        return shop;
+    public Shop shop() {
+        return openRoot.getShop();
     }
 }

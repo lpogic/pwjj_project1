@@ -1,12 +1,14 @@
-package app.core;
+package app.core.pane;
 
-import app.core.shop.Dealer;
+import app.core.OpenRoot;
+import app.core.scene.OpenScene;
+import app.core.stage.OpenStage;
+import app.core.shop.Shop;
 
 public abstract class OpenSceneScion {
 
     private Object id;
     private OpenScene openScene;
-    private Dealer shop;
 
     public OpenSceneScion(Object id, OpenScene openScene) {
         this(id);
@@ -15,10 +17,11 @@ public abstract class OpenSceneScion {
 
     public OpenSceneScion(Object id) {
         this.id = id;
-        shop = new Dealer();
     }
 
-    protected void setLineage(OpenScene openScene){this.openScene = openScene;}
+    protected void setLineage(OpenScene openScene){
+        this.openScene = openScene;
+    }
 
     public Object getId() {
         return id;
@@ -40,8 +43,6 @@ public abstract class OpenSceneScion {
         return openScene;
     }
 
-    public Dealer getShop() {
-        return shop;
-    }
+    public Shop shop(){return openRoot().getShop();}
 
 }

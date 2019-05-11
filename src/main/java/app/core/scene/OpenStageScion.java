@@ -1,12 +1,13 @@
-package app.core;
+package app.core.scene;
 
-import app.core.shop.Dealer;
+import app.core.OpenRoot;
+import app.core.stage.OpenStage;
+import app.core.shop.Shop;
 
 public abstract class OpenStageScion {
 
     private Object id;
     private OpenStage openStage;
-    private Dealer shop;
 
     public OpenStageScion(Object id, OpenStage openStage) {
         this(id);
@@ -15,10 +16,11 @@ public abstract class OpenStageScion {
 
     public OpenStageScion(Object id) {
         this.id = id;
-        shop = new Dealer();
     }
 
-    protected void setLineage(OpenStage openStage){this.openStage = openStage;}
+    protected void setLineage(OpenStage openStage){
+        this.openStage = openStage;
+    }
 
     public Object getId() {
         return id;
@@ -36,8 +38,8 @@ public abstract class OpenStageScion {
         return openStage;
     }
 
-    public Dealer getShop() {
-        return shop;
+    public Shop shop() {
+        return openRoot().getShop();
     }
 
 }

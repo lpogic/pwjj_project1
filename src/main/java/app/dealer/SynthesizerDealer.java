@@ -1,12 +1,14 @@
-package app.shipper;
+package app.dealer;
 
 import app.core.OpenRoot;
-import app.core.service.OpenRootDealer;
+import app.core.shop.OpenDealer;
+import app.core.shop.contract.Contract;
+import app.core.shop.contract.stamp.Stamp;
 import app.model.MidiTrackPlayer;
 import app.model.TrackText;
 
-public class SynthesizerDealer extends OpenRootDealer {
-    public static final Object play = new Object();
+public class SynthesizerDealer extends OpenDealer {
+    public static final Contract<Object> play = Contract.forObject(Stamp.SERVICE);
 
     public SynthesizerDealer(OpenRoot openRoot) {
         super(openRoot);
@@ -14,10 +16,10 @@ public class SynthesizerDealer extends OpenRootDealer {
 
     @Override
     public void employ() {
-        offer(play,()->{
+        shop().offer(play,()->{
             synchronized (play) {
-                if (rootDealer().order(TrackText.class)) {
-                    TrackText trackText = rootDealer().purchase(TrackText.class);
+                if (shop().order(TrackText.class)) {
+                    TrackText trackText = shop().deal(TrackText.class);
                     if (MidiTrackPlayer.validateTrackText(trackText.getTrack())) {
                         MidiTrackPlayer.play(trackText, MidiTrackPlayer.INSTRUMENT_BASS);
                     }

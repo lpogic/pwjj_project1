@@ -1,15 +1,21 @@
 package app.model;
 
+import app.core.shop.contract.ClassicContract;
+import app.core.shop.contract.Contract;
+
 import javax.sound.midi.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class MidiTrackPlayer {
+
+    public static final Contract<String> childPath = Contract.forObjectOf(String.class);
+
     public static final int CMD_PICK_INSTRUMENT = 192;
     public static final int CMD_PLAY = 144;
     public static final int CMD_STOP = 128;
-    public static final int INSTRUMENT_BASS = 10;
+    public static final int INSTRUMENT_BASS = 87;
 
     private MidiTrackPlayer() {
     }

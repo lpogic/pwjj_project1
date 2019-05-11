@@ -1,16 +1,14 @@
 package app;
 
 import app.core.OpenRoot;
-import app.core.shop.Product;
-import app.shipper.DatabaseDealer;
-import app.shipper.HooktheoryDealer;
-import app.shipper.LoginDealer;
-import app.shipper.SynthesizerDealer;
+import app.core.shop.contract.Contract;
+import app.model.MidiTrackPlayer;
+import app.dealer.DatabaseDealer;
+import app.dealer.HooktheoryDealer;
+import app.dealer.LoginDealer;
+import app.dealer.SynthesizerDealer;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
-import javax.sound.midi.Synthesizer;
-
 
 public class Main extends OpenRoot {
 
@@ -19,25 +17,18 @@ public class Main extends OpenRoot {
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        super.start(primaryStage);
+    public void employ(Stage primaryStage) {
 
+        openDealer(new LoginDealer(this)).employ();
+        openDealer(new HooktheoryDealer(this)).employ();
+        openDealer(new SynthesizerDealer(this)).employ();
+        openDealer(new DatabaseDealer(this)).employ();
 
-        openDealer(LoginDealer.class,new LoginDealer(this)).employ();
-        openDealer(HooktheoryDealer.class,new HooktheoryDealer(this)).employ();
-        openDealer(SynthesizerDealer.class,new SynthesizerDealer()).employ();
-        openDealer(DatabaseDealer.class,new DatabaseDealer(this)).employ();
+        getShop().deliver(MidiTrackPlayer.childPath,"4");
 
         primaryStage.setTitle("Syntetyzator dzwiekow");
         primaryStage.centerOnScreen();
         openStage(primaryStage).openScene("main").show();
-
-        openDealer().deliver("childPath","4", Product.REUSABLE);
-    }
-
-    @Override
-    public void stop() {
-
     }
 }
 

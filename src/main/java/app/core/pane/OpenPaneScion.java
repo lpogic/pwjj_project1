@@ -1,20 +1,20 @@
-package app.core;
+package app.core.pane;
 
-import app.core.shop.Dealer;
+import app.core.OpenRoot;
+import app.core.scene.OpenScene;
+import app.core.stage.OpenStage;
+import app.core.shop.Shop;
 
 public abstract class OpenPaneScion {
 
     private OpenPane openPane;
-    private Dealer shop;
 
     public OpenPaneScion(OpenPane openPane) {
         this();
         setLineage(openPane);
     }
 
-    public OpenPaneScion() {
-        shop = new Dealer();
-    }
+    public OpenPaneScion() {}
 
     protected void setLineage(OpenPane openPane){this.openPane = openPane;}
 
@@ -34,7 +34,5 @@ public abstract class OpenPaneScion {
         return openPane;
     }
 
-    public Dealer getShop() {
-        return shop;
-    }
+    public Shop shop(){return openRoot().getShop();}
 }

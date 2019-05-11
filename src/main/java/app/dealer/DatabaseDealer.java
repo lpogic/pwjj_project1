@@ -1,24 +1,24 @@
-package app.shipper;
+package app.dealer;
 
+import app.controller.MainController;
 import app.controller.TracksListController;
 import app.core.OpenRoot;
 import app.core.shop.OpenDealer;
-import app.core.shop.Product;
-import app.core.shop.voucher.Voucher;
-import app.core.shop.voucher.SimpleVoucher;
+import app.core.shop.contract.Contract;
+import app.core.shop.contract.stamp.Stamp;
 import app.model.DatabaseConnection;
 import app.model.TrackText;
 import javafx.scene.control.Alert;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseDealer extends OpenDealer {
-    public static final Voucher<Object> connect = new Voucher<>(Object.class);
-    public static final Voucher<List<TrackText>> getFilteredTracks = new Voucher<List<TrackText>>((List<TrackText>).getBrand());
-    public static final SimpleVoucher textTrackSavingDialog = new SimpleVoucher();
-    public static final SimpleVoucher saveTrackText = new SimpleVoucher();
+    private static final Contract<Object> connect = Contract.forObject();
+    public static final Contract<List<TrackText>> getFilteredTracks =
+            Contract.forListOf(TrackText.class,Stamp.SUPPLY);
+    public static final Contract<Object> textTrackSavingDialog = Contract.forObject();
+    public static final Contract<Object> saveTrackText = Contract.forObject();
 
     private DatabaseConnection db;
 
@@ -28,9 +28,9 @@ public class DatabaseDealer extends OpenDealer {
     }
 
     @Override
-    public void employ() {
+    public void employ(){
 
-        offer(connect,()->{
+        shop().offer(connect,()->{
             try{
                 System.out.println("create connection");
                 db.createConnection();
@@ -44,14 +44,12 @@ public class DatabaseDealer extends OpenDealer {
                 alert.showAndWait();
             }
             return null;
-        }, Product.REUSABLE);
+        });
 
-        offer(getFilteredTracks,()->{
-            if(order(connect)){
-                String track = order(TracksListController.trackFilter) ?
-                        (String)purchase(TracksListController.trackFilter) : "";
-                String name = order(TracksListController.nameFilter) ?
-                        (String)purchase(TracksListController.nameFilter) : "";
+        shop().offer(getFilteredTracks,()->{
+            if(shop().order(connect)){
+                String track = shop().deal(TracksListController.trackFilter,"");
+                String name = shop().deal(TracksListController.nameFilter,"");
                 try{
                     return db.getTracksByNameLikeAndTrackLike(name, track);
                 }catch(SQLException sqle){
@@ -64,19 +62,19 @@ public class DatabaseDealer extends OpenDealer {
             return null;
         });
 
-        offer(textTrackSavingDialog,()->{
-            if(order("TrackText")){
-                openRoot().openStage("saveTrack").openScene().openStyle("css/login.css");
-                openRoot().openStage("saveTrack").showAndWait();
-                return purchase(saveTrackText);
+        shop().offer(MainController.saveTrack,()->{
+            if(shop().order(TrackText.class)){
+                root().openStage("saveTrack").openScene().openStyle("css/login.css");
+                root().openStage("saveTrack").showAndWait();
+                return shop().deal(saveTrackText);
             }
             return null;
         });
 
-        offer(saveTrackText,()->{
-            if(order(connect) && order("TrackText", TrackText.class)){
+        shop().offer(saveTrackText,()->{
+            if(shop().order(connect) && shop().order(TrackText.class)){
                 try{
-                    db.saveEntry((TrackText)purchase("TrackText"));
+                    db.saveEntry(shop().deal(TrackText.class));
                     return true;
                 }catch (SQLException sqle){
                     Alert alert = new Alert(Alert.AlertType.ERROR);

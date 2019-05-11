@@ -1,10 +1,10 @@
 package app.controller;
 
-import app.core.OpenController;
-import app.core.shop.Product;
+import app.core.pane.OpenController;
+import app.core.shop.contract.Contract;
 import app.model.MidiTrackPlayer;
 import app.model.TrackText;
-import app.shipper.SynthesizerDealer;
+import app.dealer.SynthesizerDealer;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -32,13 +32,12 @@ public class SynthesizerController extends OpenController {
 
     @Override
     protected void employ() {
-//        rate.showTickLabelsProperty().bind(rate.valueChangingProperty());
 
         image.setImage(new Image("img/play.png"));
         trackText = new TrackText();
         songText.textProperty().bindBidirectional(trackText.getTrackProperty());
         rate.valueProperty().bindBidirectional(trackText.getRateProperty());
-        openRoot().getShop().deliver("TrackText",trackText, Product.REUSABLE);
+        shop().deliver(TrackText.class,trackText);
         songText.textProperty().addListener((cl,ov,nv)->{
             if(MidiTrackPlayer.validateTrackText(nv)) {
                 hbox.getChildren().clear();
@@ -55,7 +54,6 @@ public class SynthesizerController extends OpenController {
 
     @Override
     protected void dress() {
-
     }
 
     @FXML
@@ -64,6 +62,6 @@ public class SynthesizerController extends OpenController {
     }
 
     private void playTrack(){
-        openRoot().getShop().instantOrder(SynthesizerDealer.play);
+        shop().deal(SynthesizerDealer.play);
     }
 }

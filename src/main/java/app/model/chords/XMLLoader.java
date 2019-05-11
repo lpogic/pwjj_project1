@@ -21,11 +21,11 @@ public class XMLLoader {
         this.inputStream = inputStream;
     }
 
-    public static Collection<TrendyChord> loadTrendyChords(InputStream inputStream)throws Exception{
+    public static List<TrendyChord> loadTrendyChords(InputStream inputStream)throws Exception{
         return new XMLLoader(inputStream).loadTrendyChords();
     }
 
-    public Collection<TrendyChord> loadTrendyChords() throws Exception {
+    public List<TrendyChord> loadTrendyChords() throws Exception {
 
         List<TrendyChord> trendyChords = new ArrayList<>();
         TrendyChord proceedTrendyChord = new TrendyChord();

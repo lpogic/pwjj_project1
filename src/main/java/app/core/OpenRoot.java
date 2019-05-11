@@ -1,6 +1,8 @@
 package app.core;
 
 import app.core.shop.OpenDealer;
+import app.core.shop.Shop;
+import app.core.stage.OpenStage;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -17,19 +19,27 @@ public abstract class OpenRoot extends Application {
     public final String fxmlPostPath = ".fxml";
 
     private Map<Object, OpenStage> stages;
-    private Map<Object, OpenDealer> dealers;
+    private Shop shop;
     private Stage primaryStage;
 
     @Override
     public void init() {
         stages = new HashMap<>();
-        dealers = new HashMap<>();
+        shop = new Shop();
     }
 
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
+        employ(primaryStage);
     }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+    }
+
+    public abstract void employ(Stage primaryStage);
 
     public OpenStage openStage(Object key){
         OpenStage openStage = stages.get(key);
@@ -76,19 +86,11 @@ public abstract class OpenRoot extends Application {
         openStage(new Stage()).openScene(fxml).show();
     }
 
-    public OpenDealer openDealer(){return openDealer(OpenRoot.class);}
-
-    public OpenDealer openDealer(Object key){
-        OpenDealer openDealer = dealers.get(key);
-        if(openDealer == null) {
-            openDealer = new OpenDealer(this);
-            dealers.put(key, openDealer);
-        }
-        return openDealer;
+    public Shop getShop() {
+        return shop;
     }
 
-    public OpenDealer openDealer(Object key, OpenDealer openDealer){
-        dealers.put(key,openDealer);
+    public OpenDealer openDealer(OpenDealer openDealer){
         return openDealer;
     }
 }

@@ -1,9 +1,8 @@
 package app.controller;
 
-import app.core.OpenController;
-import app.shipper.DatabaseDealer;
-import app.shipper.HooktheoryDealer;
-import app.shipper.LoginDealer;
+import app.core.pane.OpenController;
+import app.core.shop.contract.Contract;
+import app.core.shop.contract.stamp.Stamp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
@@ -11,8 +10,10 @@ import javafx.scene.control.TabPane;
 
 
 public class MainController extends OpenController {
-    public static final Object setTab1 = new Object();
-    public static final Object setTab2 = new Object();
+    public static final Contract<Object> setTab1 = Contract.forObject(Stamp.SERVICE);
+    public static final Contract<Object> setTab2 = Contract.forObject(Stamp.SERVICE);
+    public static final Contract<Object> getToken = Contract.forObject(Stamp.SERVICE);
+    public static final Contract<Object> saveTrack = Contract.forObject(Stamp.SERVICE);
 
     @FXML
     private Tab tab1;
@@ -31,11 +32,11 @@ public class MainController extends OpenController {
             if(tab2.isSelected())
                 openScene().openPane("tracksList").dress();
         });
-        openRoot().getShop().offer(setTab1,()->{
+        shop().offer(setTab1,()->{
             tabPane.getSelectionModel().select(tab1);
             return null;
         });
-        openRoot().getShop().offer(setTab2,()->{
+        shop().offer(setTab2,()->{
             tabPane.getSelectionModel().select(tab2);
             return null;
         });
@@ -52,16 +53,16 @@ public class MainController extends OpenController {
 
     @FXML
     public void loginAction(){
-        System.out.println(openRoot().getShop().instantOrder(LoginDealer.token));
+        System.out.println(shop().deal(getToken,"nie zdobyto tokena"));
     }
 
     @FXML
     void requestAction(ActionEvent event) {
-        openRoot().getShop().instantOrder(HooktheoryDealer.showTrends);
+        shop().deal(DiagramController.show);
     }
 
     @FXML
     void saveAction(ActionEvent event) {
-        openRoot().getShop().instantOrder(DatabaseDealer.textTrackSavingDialog);
+        shop().deal(saveTrack);
     }
 }

@@ -1,5 +1,7 @@
-package app.core;
+package app.core.scene;
 
+import app.core.stage.OpenStage;
+import app.core.pane.OpenPane;
 import javafx.scene.Scene;
 
 import java.util.*;
