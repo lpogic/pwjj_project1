@@ -1,7 +1,6 @@
 package app.controller;
 
 import app.core.pane.OpenController;
-import app.core.shop.contract.Contract;
 import app.model.MidiTrackPlayer;
 import app.model.TrackText;
 import app.dealer.SynthesizerDealer;
@@ -62,6 +61,6 @@ public class SynthesizerController extends OpenController {
     }
 
     private void playTrack(){
-        shop().deal(SynthesizerDealer.play);
+        shop().deal(SynthesizerDealer.playTrack);
     }
 }

@@ -1,7 +1,7 @@
 package app.controller;
 
 import app.core.pane.OpenController;
-import app.dealer.LoginDealer;
+import app.dealer.HooktheoryDealer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressIndicator;
@@ -63,8 +63,8 @@ public class LoginController extends OpenController {
         }
         if(valid){
             responseWait();
-            shop().deliver(LoginDealer.username,usernameText);
-            shop().deliver(LoginDealer.password,passwordText);
+            shop().deliver(HooktheoryDealer.username,usernameText);
+            shop().deliver(HooktheoryDealer.password,passwordText);
             new Thread(this::requestToken).start();
         }
     }
@@ -85,7 +85,7 @@ public class LoginController extends OpenController {
 
 
     private void requestToken() {
-        if (shop().order(LoginDealer.remoteToken)) {
+        if (shop().order(HooktheoryDealer.requestToken)) {
             Platform.runLater(() -> openStage().close());
         } else Platform.runLater(this::responseFail);
     }

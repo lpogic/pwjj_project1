@@ -3,6 +3,8 @@ package app.controller;
 import app.core.pane.OpenController;
 import app.core.shop.contract.Contract;
 import app.core.shop.contract.stamp.Stamp;
+import app.dealer.DatabaseDealer;
+import app.dealer.HooktheoryDealer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
@@ -10,10 +12,10 @@ import javafx.scene.control.TabPane;
 
 
 public class MainController extends OpenController {
+
     public static final Contract<Object> setTab1 = Contract.forObject(Stamp.SERVICE);
     public static final Contract<Object> setTab2 = Contract.forObject(Stamp.SERVICE);
-    public static final Contract<Object> getToken = Contract.forObject(Stamp.SERVICE);
-    public static final Contract<Object> saveTrack = Contract.forObject(Stamp.SERVICE);
+    public static final Contract<Object> showDiagram = Contract.forObject(Stamp.SERVICE);
 
     @FXML
     private Tab tab1;
@@ -53,16 +55,16 @@ public class MainController extends OpenController {
 
     @FXML
     public void loginAction(){
-        System.out.println(shop().deal(getToken,"nie zdobyto tokena"));
+        System.out.println(shop().deal(HooktheoryDealer.getToken,"nie zdobyto tokena"));
     }
 
     @FXML
     void requestAction(ActionEvent event) {
-        shop().deal(DiagramController.show);
+        shop().deal(showDiagram);
     }
 
     @FXML
     void saveAction(ActionEvent event) {
-        shop().deal(saveTrack);
+        shop().deal(DatabaseDealer.saveTrackDialog);
     }
 }

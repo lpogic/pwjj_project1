@@ -1,6 +1,5 @@
 package app.dealer;
 
-import app.controller.MainController;
 import app.controller.TracksListController;
 import app.core.OpenRoot;
 import app.core.shop.OpenDealer;
@@ -11,14 +10,12 @@ import app.model.TrackText;
 import javafx.scene.control.Alert;
 
 import java.sql.SQLException;
-import java.util.List;
 
 public class DatabaseDealer extends OpenDealer {
+
     private static final Contract<Object> connect = Contract.forObject();
-    public static final Contract<List<TrackText>> getFilteredTracks =
-            Contract.forListOf(TrackText.class,Stamp.SUPPLY);
-    public static final Contract<Object> textTrackSavingDialog = Contract.forObject();
-    public static final Contract<Object> saveTrackText = Contract.forObject();
+    public static final Contract<Object> saveTrackDialog = Contract.forObject(Stamp.SERVICE);
+    public static final Contract<Object> saveTrack = Contract.forObject(Stamp.SUPPLY);
 
     private DatabaseConnection db;
 
@@ -46,7 +43,7 @@ public class DatabaseDealer extends OpenDealer {
             return null;
         });
 
-        shop().offer(getFilteredTracks,()->{
+        shop().offer(TracksListController.getFilteredTracks,()->{
             if(shop().order(connect)){
                 String track = shop().deal(TracksListController.trackFilter,"");
                 String name = shop().deal(TracksListController.nameFilter,"");
@@ -62,16 +59,16 @@ public class DatabaseDealer extends OpenDealer {
             return null;
         });
 
-        shop().offer(MainController.saveTrack,()->{
+        shop().offer(DatabaseDealer.saveTrackDialog,()->{
             if(shop().order(TrackText.class)){
                 root().openStage("saveTrack").openScene().openStyle("css/login.css");
                 root().openStage("saveTrack").showAndWait();
-                return shop().deal(saveTrackText);
+                return shop().deal(saveTrack);
             }
             return null;
         });
 
-        shop().offer(saveTrackText,()->{
+        shop().offer(saveTrack,()->{
             if(shop().order(connect) && shop().order(TrackText.class)){
                 try{
                     db.saveEntry(shop().deal(TrackText.class));

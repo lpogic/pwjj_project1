@@ -2,16 +2,21 @@ package app.controller;
 
 import app.core.pane.OpenController;
 import app.core.shop.contract.Contract;
+import app.core.shop.contract.stamp.Stamp;
 import app.model.TrackText;
-import app.dealer.DatabaseDealer;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 
+import java.util.List;
+
 public class TracksListController extends OpenController {
-    public static final Contract<String> trackFilter = Contract.forObjectOf(String.class);
-    public static final Contract<String> nameFilter = Contract.forObjectOf(String.class);
+
+    public static final Contract<String> trackFilter = Contract.forObjectOf(String.class, Stamp.SUPPLY);
+    public static final Contract<String> nameFilter = Contract.forObjectOf(String.class, Stamp.SUPPLY);
+    public static final Contract<List<TrackText>> getFilteredTracks =
+            Contract.forListOf(TrackText.class, Stamp.SUPPLY);
 
 
     @FXML
@@ -42,15 +47,15 @@ public class TracksListController extends OpenController {
 
     @Override
     protected void dress() {
-        if(shop().order(DatabaseDealer.getFilteredTracks)){
-            list.getItems().setAll(shop().deal(DatabaseDealer.getFilteredTracks));
+        if(shop().order(getFilteredTracks)){
+            list.getItems().setAll(shop().deal(getFilteredTracks));
         }
     }
 
     @FXML
     void filterAction() {
-        if(shop().order(DatabaseDealer.getFilteredTracks)){
-            list.getItems().setAll(shop().deal(DatabaseDealer.getFilteredTracks));
+        if(shop().order(getFilteredTracks)){
+            list.getItems().setAll(shop().deal(getFilteredTracks));
         }
     }
 }

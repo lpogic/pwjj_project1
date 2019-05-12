@@ -1,8 +1,5 @@
 package app.model;
 
-import app.core.shop.contract.ClassicContract;
-import app.core.shop.contract.Contract;
-
 import javax.sound.midi.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,17 +7,22 @@ import java.util.List;
 
 public class MidiTrackPlayer {
 
-    public static final Contract<String> childPath = Contract.forObjectOf(String.class);
-
-    public static final int CMD_PICK_INSTRUMENT = 192;
-    public static final int CMD_PLAY = 144;
-    public static final int CMD_STOP = 128;
+    private static final int CMD_PICK_INSTRUMENT = 192;
+    private static final int CMD_PLAY = 144;
+    private static final int CMD_STOP = 128;
     public static final int INSTRUMENT_BASS = 87;
+    private static MidiTrackPlayer instance = new MidiTrackPlayer();
 
     private MidiTrackPlayer() {
     }
 
-    public static void play(TrackText trackText, int instrument)
+    public static MidiTrackPlayer getInstance(){return instance;}
+
+    public static boolean validateTrackText(String trackText){
+        return trackText.matches("^[1-6]*$");
+    }
+
+    public void play(TrackText trackText, int instrument)
     {
         System.out.println("midi play");
         Collection<Integer> noteSequence = parseNoteSequence(trackText.getTrack());
@@ -32,11 +34,11 @@ public class MidiTrackPlayer {
             Track track = sequence.createTrack();
             int i = 1;
 
-            track.add(makeEvent(CMD_PICK_INSTRUMENT, 1, instrument, 0, 1));
+            track.add(makeEvent(CMD_PICK_INSTRUMENT, instrument, 0, 1));
             for(Integer it : noteSequence){
-                track.add(makeEvent(CMD_PLAY,1,it,100,i));
+                track.add(makeEvent(CMD_PLAY,it,100,i));
                 i+= rate;
-                track.add(makeEvent(CMD_STOP,1,it,100,i));
+                track.add(makeEvent(CMD_STOP,it,100,i));
             }
 
             sequencer.setSequence(sequence);
@@ -45,6 +47,7 @@ public class MidiTrackPlayer {
             while (sequencer.isRunning()){
                 Thread.sleep(1);
             }
+            sequencer.close();
             System.out.println("end");
         }
         catch (MidiUnavailableException | InvalidMidiDataException | InterruptedException mue) {
@@ -52,21 +55,16 @@ public class MidiTrackPlayer {
         }
     }
 
-    private static MidiEvent makeEvent(int command, int channel,
-                               int note, int velocity, int tick) {
+    private MidiEvent makeEvent(int command, int note, int velocity, int tick) {
         try {
-            return new MidiEvent(new ShortMessage(command, channel, note, velocity), tick);
+            return new MidiEvent(new ShortMessage(command, 1, note, velocity), tick);
         } catch (InvalidMidiDataException imde) {
             imde.printStackTrace();
         }
         return null;
     }
 
-    public static boolean validateTrackText(String trackText){
-        return trackText.matches("^[1-6]*$");
-    }
-
-    public static Collection<Integer> parseNoteSequence(String trackText){
+    private Collection<Integer> parseNoteSequence(String trackText){
         List<Integer> notes = new ArrayList<>();
         for(char it : trackText.toCharArray()){
             notes.add((it - '0') * 4 + 20);

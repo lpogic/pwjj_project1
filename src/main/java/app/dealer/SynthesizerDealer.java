@@ -8,20 +8,24 @@ import app.model.MidiTrackPlayer;
 import app.model.TrackText;
 
 public class SynthesizerDealer extends OpenDealer {
-    public static final Contract<Object> play = Contract.forObject(Stamp.SERVICE);
+
+    public static final Contract<Object> playTrack = Contract.forObject(Stamp.SERVICE);
+
+    private MidiTrackPlayer player;
 
     public SynthesizerDealer(OpenRoot openRoot) {
         super(openRoot);
+        player = MidiTrackPlayer.getInstance();
     }
 
     @Override
     public void employ() {
-        shop().offer(play,()->{
-            synchronized (play) {
+        shop().offer(playTrack,()->{
+            synchronized (playTrack) {
                 if (shop().order(TrackText.class)) {
                     TrackText trackText = shop().deal(TrackText.class);
                     if (MidiTrackPlayer.validateTrackText(trackText.getTrack())) {
-                        MidiTrackPlayer.play(trackText, MidiTrackPlayer.INSTRUMENT_BASS);
+                        player.play(trackText, MidiTrackPlayer.INSTRUMENT_BASS);
                     }
                 }
             }

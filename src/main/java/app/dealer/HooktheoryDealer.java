@@ -1,79 +1,86 @@
 package app.dealer;
 
-import app.controller.DiagramController;
+import app.controller.MainController;
 import app.core.OpenRoot;
 import app.core.shop.OpenDealer;
 import app.core.shop.contract.Contract;
+import app.core.shop.contract.stamp.Stamp;
+import app.model.HooktheoryConnection;
 import app.model.MidiTrackPlayer;
 import app.model.TrackText;
 import app.model.chords.TrendyChord;
-import app.model.chords.XMLLoader;
 import javafx.scene.control.Alert;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
 import java.util.List;
+
 
 public class HooktheoryDealer extends OpenDealer {
 
+    public static final Contract<String> requestToken = Contract.forObjectOf(String.class);
+    public static final Contract<String> getToken = Contract.forObjectOf(String.class);
+    public static final Contract<String> username = Contract.forObjectOf(String.class);
+    public static final Contract<String> password = Contract.forObjectOf(String.class);
+    public static final Contract<List<TrendyChord>> getTrends = Contract.forListOf(TrendyChord.class, Stamp.SUPPLY);
+
+    private HooktheoryConnection hooktheory;
+
     public HooktheoryDealer(OpenRoot openRoot) {
         super(openRoot);
+        hooktheory = new HooktheoryConnection();
     }
 
     @Override
     public void employ() {
 
-        shop().offer(DiagramController.show,()->{
-            if(shop().order(LoginDealer.token)){
+        shop().offer(getToken,()->{
+            root().openStage("login").openScene().openStyle("css/login.css");
+            root().openStage("login").showAndWait();
+            return shop().deal(requestToken);
+        });
+
+        shop().offer(requestToken,()->{
+            if(shop().order(username) && shop().order(password)){
+                try {
+                    return hooktheory.requestToken(shop().deal(username), shop().deal(password));
+                }catch (IOException e){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Blad");
+                    alert.setHeaderText("Wystapil blad podczas logowania");
+                    alert.showAndWait();
+                }
+            }
+            return null;
+        });
+
+        shop().offer(MainController.showDiagram,()->{
+            if(shop().order(getTrends)){
                 root().openStage("diagram").show();
             }
             return null;
         });
 
-        shop().offer(DiagramController.getTrends,()->{
-            if(shop().order(LoginDealer.token) && shop().order(TrackText.class)){
+        shop().offer(getTrends,()->{
+            if(shop().order(getToken) && shop().order(TrackText.class)){
                 TrackText trackText = shop().deal(TrackText.class);
                 if(MidiTrackPlayer.validateTrackText(trackText.getTrack())) {
                     try {
-                        return requestTrends(shop().deal(LoginDealer.token), convertTrack(trackText.getTrack()));
-                    }catch (Exception e){
+                        return hooktheory.requestTrends(shop().deal(getToken), trackText.getTrack());
+                    }catch (IOException e){
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Blad");
-                        alert.setHeaderText("Wystapil blad podczas proby zaladowania diagramu");
+                        alert.setHeaderText("Blad polaczenia z Hooktheory");
+                        alert.showAndWait();
+                    }catch (XMLStreamException xmlse){
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Blad");
+                        alert.setHeaderText("Nie znaleziono propozycji");
                         alert.showAndWait();
                     }
                 }
             }
             return null;
         });
-    }
-
-    private List<TrendyChord> requestTrends(String token, String childPath)throws Exception{
-        String urlString = "https://api.hooktheory.com/v1/trends/nodes";
-        if(!childPath.isEmpty()){
-            urlString += "?cp=" + childPath;
-        }
-        System.out.println(urlString);
-        URL url = new URL(urlString);
-        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Accept","application/xml");
-        connection.setRequestProperty("Content-Type","application/xml");
-        connection.setRequestProperty("Authorization","Bearer " + token);
-
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            return XMLLoader.loadTrendyChords(connection.getInputStream());
-        }
-        return null;
-    }
-
-    private String convertTrack(String track){
-        if(track.isEmpty())return "";
-        StringBuilder stringBuilder = new StringBuilder("" + track.charAt(0));
-        for(int i = 1;i < track.length();++i){
-            stringBuilder.append(',').append(track.charAt(i));
-        }
-        return stringBuilder.toString();
     }
 }

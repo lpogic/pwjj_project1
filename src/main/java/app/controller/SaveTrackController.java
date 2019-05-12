@@ -109,7 +109,7 @@ public class SaveTrackController extends OpenController {
 
 
     private void saveTrack() {
-        Platform.runLater(shop().order(DatabaseDealer.saveTrackText) ? this::responseSuccess : this::responseFail);
+        Platform.runLater(shop().order(DatabaseDealer.saveTrack) ? this::responseSuccess : this::responseFail);
     }
 
 }

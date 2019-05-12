@@ -1,6 +1,5 @@
 package app.core.shop;
 
-import app.core.shop.contract.ExclusiveContract;
 import app.core.shop.contract.Contract;
 
 import java.util.HashMap;
@@ -57,22 +56,15 @@ public class Shop {
         return order(Contract.forClass(brand));
     }
 
-
-
     public<T> T deal(Contract<T> contract) {
         Product product = stock.get(contract);
-        if(product == null)throw new NullPointerException("Deal failed: unregistered contract:" + contract.toString());
-        T item = contract.fetch(product, true);
-        if(item == null)throw new NullPointerException("Deal failed: invalid contract:" + contract.toString());
-        return item;
+        if(product == null)return null;
+        return contract.fetch(product, true);
     }
 
     public<T> T deal(Contract<T> contract, T substitute){
-        try{
-            return deal(contract);
-        }catch(NullPointerException npe){
-            return substitute;
-        }
+        T item = deal(contract);
+        return item != null ? item : substitute;
     }
 
     public <T> T deal(Class<T> brand){
@@ -81,5 +73,13 @@ public class Shop {
 
     public<T> T deal(Class<T> brand, T substitute){
         return deal(Contract.forClass(brand),substitute);
+    }
+
+    public<T> T safeDeal(Contract<T> contract) {
+        Product product = stock.get(contract);
+        if(product == null)throw new NullPointerException("Deal failed: unregistered contract");
+        T item = contract.fetch(product, true);
+        if(item == null)throw new NullPointerException("Deal failed: invalid contract");
+        return item;
     }
 }

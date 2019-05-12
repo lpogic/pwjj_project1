@@ -1,15 +1,13 @@
 package app.model.chords;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.events.Characters;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 
@@ -21,11 +19,11 @@ public class XMLLoader {
         this.inputStream = inputStream;
     }
 
-    public static List<TrendyChord> loadTrendyChords(InputStream inputStream)throws Exception{
+    public static List<TrendyChord> loadTrendyChords(InputStream inputStream)throws XMLStreamException{
         return new XMLLoader(inputStream).loadTrendyChords();
     }
 
-    public List<TrendyChord> loadTrendyChords() throws Exception {
+    public List<TrendyChord> loadTrendyChords() throws XMLStreamException {
 
         List<TrendyChord> trendyChords = new ArrayList<>();
         TrendyChord proceedTrendyChord = new TrendyChord();

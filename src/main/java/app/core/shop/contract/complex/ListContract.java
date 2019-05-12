@@ -11,7 +11,7 @@ public class ListContract<T> implements Contract<List<T>> {
     private Class<T> brand;
     private Stamp stamp;
 
-    ListContract(Class<T> brand, Stamp stamp) {
+    public ListContract(Class<T> brand, Stamp stamp) {
         this.brand = brand;
         this.stamp = stamp;
     }
